@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void attemptRegister(){
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.logOut();
+        ParseUser currentUser = ParseUser.getCurrentUser();//This is to sign out the current user who is registered
+        currentUser.logOut();                              //otherwise we won't be able to add(Register) multiple users
         name = (EditText) findViewById(R.id.editText6);
         mail = (EditText) findViewById(R.id.editText5);
         pass = (EditText) findViewById(R.id.editText7);
@@ -58,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
         user.setPassword(password);
         user.setEmail(email);
 
-        user.signUpInBackground(new SignUpCallback(){
+        user.signUpInBackground(new SignUpCallback(){     //mehod used for signing up a new user
             @Override
-            public void done(ParseException e) {
-                if (e == null) {
+            public void done(ParseException e) {          //to check if the new user was successfully created
+                if (e == null) {                          //null means successfully created, that is there is no error
                     final String title = "Account Created Successfully!";
                     final String message = "Please verify your email before Login";
                     Toast.makeText(getApplicationContext(),title+"\n"+message,Toast.LENGTH_LONG).show();
-                } else {
+                } else {                                  //not null means there is some error in creating a new user
                     final String title = "Error Account Creation failed";
                     final String message = "Account could not be created";
                     Toast.makeText(getApplicationContext(),title+"\n"+message+"\n"+e.toString(),Toast.LENGTH_LONG).show();
@@ -78,25 +78,24 @@ public class MainActivity extends AppCompatActivity {
         name1 = (EditText) findViewById(R.id.editText8);
         pass1 = (EditText) findViewById(R.id.editText9);
         try{
-        ParseUser.logInInBackground(name1.getText().toString(), pass1.getText().toString(), new LogInCallback() {
+        ParseUser.logInInBackground(name1.getText().toString(), pass1.getText().toString(), new LogInCallback() {   //method requesting log in
             @Override
             public void done(ParseUser parseUser, ParseException e) {
-                if (parseUser != null) {
-                    Toast.makeText(getApplicationContext(),"User not found"+"\n"+"No such user exists",Toast.LENGTH_LONG).show();
-                    if(parseUser.getBoolean("emailVerified")) {
+                if (parseUser != null) {                            // checks if such a user user with provided credentials exist
+                    if(parseUser.getBoolean("emailVerified")) { // emailverified is string that is assigned to users who verified their email
                         Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
                         intent.putExtra("name",name1.getText().toString());
                         startActivity(intent);
                     }
-                    else {
+                    else {                                           // if its not verified user is logged out and asked to verify his/her account
                         parseUser.logOut();
                         Toast.makeText(getApplicationContext(),"Login Fail"+"\n"+"Please Verify Your Email first",Toast.LENGTH_LONG).show();
                     }
-                } else {
+                } else {                                            // if the login was not successful because of errors like wrong credentials the user is notified to try again
                     Toast.makeText(getApplicationContext(),"Login fail"+"\n"+ e.getMessage()+ "Please retry",Toast.LENGTH_LONG).show();
                 }
             }
-        });}catch(Exception e){
+        });}catch(Exception e){                                     // if there is some error in logging in process the error is displayed
             Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
         }
 
