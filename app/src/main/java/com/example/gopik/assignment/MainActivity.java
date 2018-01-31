@@ -1,5 +1,8 @@
 package com.example.gopik.assignment;
+import android.app.Fragment;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,14 +18,16 @@ import com.parse.SignUpCallback;
 
 public class MainActivity extends AppCompatActivity {
     EditText name,pass,mail,name1,pass1;
-    Button reg,log;
+    Button reg,log,swappy;
+    Boolean chk=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        swappy = (Button) findViewById(R.id.button);
         Parse.initialize(this);
         ParseInstallation.getCurrentInstallation().saveInBackground();
-        reg  = (Button) findViewById(R.id.button2);
+    /*    reg  = (Button) findViewById(R.id.button2);
         log  = (Button) findViewById(R.id.button3);
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,11 +45,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 parseLogin();
             }
-        });
+        });*/
+    swappy.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            swap();
+        }
+    });
     }
 
 
-    private void attemptRegister(){
+    /*private void attemptRegister(){
         ParseUser currentUser = ParseUser.getCurrentUser();//This is to sign out the current user who is registered
         currentUser.logOut();                              //otherwise we won't be able to add(Register) multiple users
         name = (EditText) findViewById(R.id.editText6);
@@ -71,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
+    }*/
 
-    void parseLogin() {
+  /*  void parseLogin() {
         name1 = (EditText) findViewById(R.id.editText8);
         pass1 = (EditText) findViewById(R.id.editText9);
         try{
@@ -98,5 +109,24 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
         }
 
+    }*/
+
+    public void swap(){
+    FragmentManager manager = getSupportFragmentManager();
+    FragmentTransaction transaction = manager.beginTransaction();
+    if(chk==true){
+         Register frag1 = new Register();
+         transaction.replace(R.id.frameLayout,frag1);
+         transaction.commit();
+         chk=false;
+     }
+     else
+     {
+         Login frag2 = new Login();
+         transaction.replace(R.id.frameLayout,frag2);
+         transaction.commit();
+         chk=true;
+     }
     }
+
 }
